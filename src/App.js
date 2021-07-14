@@ -2,22 +2,51 @@ import React from 'react'
 
 export class App extends React.Component {
   state = {
-    data: null
+    data: null,
+    isLoading: false,
+    hasError: false
   }
 
-  async componentDidMount () {
-    const response = await fetch('https://randomuser.me/api')
-    const data = await response.json()
+  componentDidMount () {
+    this.loadUsers()
+  }
+
+  loadUsers = async () => {
     this.setState(() => ({
-      data: data
+      isLoading: true,
+      hasError: false
     }))
+
+    try {
+      const response = await fetch('https://randomuser.me/api')
+      const data = await response.json()
+      this.setState(() => ({
+        data: data,
+        isLoading: false
+      }))
+    } catch (error) {
+      this.setState(() => ({
+        isLoading: false,
+        hasError: true
+      }))
+    }
   }
 
   render () {
     return (
       <div>
-        CodeRoad APP
-        {this.state.data && JSON.stringify(this.state.data)}
+        {
+        this.state.hasError ?
+          'Error occurred'
+          :
+          this.state.isLoading ?
+            'Loading...'
+            :
+            this.state.data === null ?
+              'No data'
+              :
+              JSON.stringify(this.state.data)
+        }
       </div>
     )
   }
