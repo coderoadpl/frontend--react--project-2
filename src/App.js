@@ -2,7 +2,7 @@ import React from 'react'
 
 export class App extends React.Component {
   state = {
-    data: null,
+    data: { results: [] },
     isLoading: false,
     hasError: false
   }
@@ -34,7 +34,7 @@ export class App extends React.Component {
 
   render () {
     return (
-      <div>
+      <ul>
         {
         this.state.hasError ?
           'Error occurred'
@@ -45,9 +45,17 @@ export class App extends React.Component {
             this.state.data === null ?
               'No data'
               :
-              JSON.stringify(this.state.data)
+                !Array.isArray(this.state.data.results) ?
+                  'Malformed data'
+                  :
+                  this.state.data.results.length === 0 ?
+                    'Results is empty'
+                    :
+                    this.state.data.results.map((user) => {
+                      return <li key={user.email}>{user.email}</li>
+                    })
         }
-      </div>
+      </ul>
     )
   }
 }
