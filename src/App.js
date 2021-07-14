@@ -17,7 +17,7 @@ export class App extends React.Component {
     return (
       <div>
         CodeRoad APP
-        {this.state.data}
+        {this.state.data && JSON.stringify(this.state.data)}
       </div>
     )
   }
