@@ -9,6 +9,15 @@ export class App extends React.Component {
 
   componentDidMount () {
     this.loadUsers()
+
+    this.intervalId = setInterval(
+      () => this.loadUsers(),
+      1000
+    )
+  }
+
+  componentWillUnmount () {
+    clearInterval(this.intervalId)
   }
 
   loadUsers = async () => {
