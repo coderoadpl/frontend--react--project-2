@@ -2,19 +2,30 @@ import React from 'react'
 
 export class App extends React.Component {
   state = {
-    data: { results: [] },
+    data: null,
     isLoading: false,
-    hasError: false
+    hasError: false,
+    isTimeoutRunning: false
   }
 
   timeoutId = null
 
-  componentDidMount () {
-    this.loadUsers()
-  }
-
   componentWillUnmount () {
     clearTimeout(this.timeoutId)
+  }
+
+  toggleTimeout = () => {
+    if (this.state.isTimeoutRunning) {
+      this.setState(() => ({
+        isTimeoutRunning: false
+      }))
+      clearTimeout(this.timeoutId)
+    } else {
+      this.setState(() => ({
+        isTimeoutRunning: true
+      }))
+      this.loadUsers()
+    }
   }
 
   loadUsers = async () => {
@@ -36,17 +47,30 @@ export class App extends React.Component {
         hasError: true
       }))
     } finally {
-      this.timeoutId = setTimeout(
-        () => this.loadUsers(),
-        1000
-      )
+      if (this.state.isTimeoutRunning) {
+        this.timeoutId = setTimeout(
+          () => this.loadUsers(),
+          1000
+        )
+      }
     }
   }
 
   render () {
     return (
-      <ul>
-        {
+      <div>
+        <button
+          onClick={this.toggleTimeout}
+        >
+          {
+            this.state.isTimeoutRunning ?
+              'STOP'
+              :
+              'START'
+          }
+        </button>
+        <ul>
+          {
         this.state.hasError ?
           'Error occurred'
           :
@@ -66,7 +90,8 @@ export class App extends React.Component {
                       return <li key={user.email}>{user.email}</li>
                     })
         }
-      </ul>
+        </ul>
+      </div>
     )
   }
 }
