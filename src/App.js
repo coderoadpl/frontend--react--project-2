@@ -7,17 +7,14 @@ export class App extends React.Component {
     hasError: false
   }
 
+  timeoutId = null
+
   componentDidMount () {
     this.loadUsers()
-
-    this.intervalId = setInterval(
-      () => this.loadUsers(),
-      1000
-    )
   }
 
   componentWillUnmount () {
-    clearInterval(this.intervalId)
+    clearTimeout(this.timeoutId)
   }
 
   loadUsers = async () => {
@@ -38,6 +35,11 @@ export class App extends React.Component {
         isLoading: false,
         hasError: true
       }))
+    } finally {
+      this.timeoutId = setTimeout(
+        () => this.loadUsers(),
+        1000
+      )
     }
   }
 
