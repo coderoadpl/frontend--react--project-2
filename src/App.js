@@ -24,7 +24,7 @@ export class App extends React.Component {
     }))
 
     try {
-      const response = await fetch('https://randomuser.me/api')
+      const response = await fetch('https://randomuser.me/api?results=10')
       const data = await response.json()
       this.setState(() => ({
         data: data,
